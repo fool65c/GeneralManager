@@ -1,0 +1,39 @@
+<div id="fullSchedule">
+  <div class="row justify-content-center">
+    <div class="col-2">League Schedule</div>
+  </div>
+  <div data-bind="foreach: _.keys(schedule())">
+    <div class="row justify-content-center">
+      <div class="col-1" data-bind="text: 'Week ' + $data"></div>
+      <div class="col-4">
+        <div data-bind="foreach: $root.schedule()[$data]">
+          <div class="row game" data-bind="ifnot: result">
+            <div class="col-5" data-bind="text: $data.game.away.city"></div>
+            <div class="col-2">at</div>
+            <div class="col-5" data-bind="text: $data.game.home.city"></div>
+          </div>
+          <div class="row game" data-bind="if: $data.result">
+            <div class="col-6" data-bind="text: $data.game.away.city + ':' + $data.result.away_score"></div>
+            <div class="col-6" data-bind="text: $data.game.home.city + ':' + $data.result.home_score"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div data-bind="if: weeksLeft() > 0" class="row">
+    <div class="col-6 offset-3">
+      <button type="button"
+              class="btn btn-secondary btn-lg btn-block main-action"
+              data-bind="click: playEntireSeason">Play Entire Season</button>
+    </div>
+  </div>
+  <div data-bind="if: weeksLeft() == 0" class="row">
+    <div class="col-6 offset-3">
+      <button type="button" 
+              class="btn btn-secondary btn-lg btn-block main-action"
+              data-bind="click: gameState.advance">
+        Start Playoffs
+      </button>
+    </div>
+  </div>
+</div>

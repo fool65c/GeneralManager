@@ -1,0 +1,27 @@
+<div id="rankings">
+  <div class="row justify-content-center">
+    <div class="col-2">League Rankings</div>
+  </div>
+  <div class="col-8 offset-2">
+    <table class="table table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">Team</th>
+          <th scope="col">Record</th>
+          <th scope="col">Points For</th>
+          <th scope="col">Points Against</th>
+        </tr>
+      </thead>
+      <tbody data-bind="foreach: _.keys(rankings())">
+        <tr> 
+          <td data-bind="text: $data"></td>
+          <td data-bind="text: $root.rankings()[$data].city"></td>
+          <td data-bind="text: $root.rankings()[$data].wins + ' - ' + $root.rankings()[$data].losses"></td>
+          <td data-bind="text: $root.rankings()[$data].points_for"></td>
+          <td data-bind="text: $root.rankings()[$data].points_against"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

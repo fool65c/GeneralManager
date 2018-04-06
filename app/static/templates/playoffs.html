@@ -1,0 +1,21 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div id="playoffs"></div>
+  </div>
+</div>
+<div class="row justify-content-center">
+  <div id="playoffActions" lass="col-2">
+    <button type="button"
+            class="btn btn-primary"
+            data-bind="click: playNextRound,
+                      visible: !playoffsOver()">
+      Play Next Week
+    </button>
+    <button type="button"
+            class="btn btn-primary"
+            data-bind="click: gameState.advance,
+                      visible: playoffsOver">
+      Start Off Season
+    </button>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <title>General Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/lib/jquery.bracket.min.css">
+    <script defer src="/lib/fontawesome-all.js"></script>
+    
+    <script src="/lib/jquery-3.2.1.min.js"></script>
+    <script src="/lib/bootstrap.bundle.min.js"></script>
+    <script src="/lib/signals.min.js"></script>
+    <script src="/lib/hasher.min.js"></script>
+    <script src="/lib/crossroads.min.js"></script>
+    <script src="/lib/underscore-min.js"></script>
+    <script src="/lib/knockout-3.4.2.js"></script>
+    <script src="/lib/jquery.bracket.min.js"></script>
+    <script src="/lib/GeneralManager.js"></script>
+    <script src="/routes/routes.js"></script>
+    <script src="/Game.js"></script>
+    <script src="/GeneralManagerRestApi.js"></script>
+    <!--<script src="/GeneralManagerCache.js"></script>-->
+    <style>
+      .team:hover {
+        background-color: yellow;
+      }
+      div.game:hover {
+        background-color: yellow;
+      }
+      
+      button.main-action { 
+        margin-top: 10px;
+      }
+
+      .xxs {
+        font-size: 0.5em;
+      }
+
+      .inner {
+        position: absolute;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <div class="container-fluid">
+      <nav id="navagation" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">General Manager</a>
+
+        <button class="navbar-toggler" 
+                type="button" 
+                data-toggle="collapse" 
+                data-target="#navbarSupportedContent" 
+                aria-controls="navbarSupportedContent" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul data-bind="foreach: menu" class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" data-bind="attr: {href: $data.href}, text: $data.text"></a>
+            </li>
+          </ul>
+
+          <!--<ul data-bind="visible: menu('NEWGAME')" class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#/newGame">Select Team </a>
+            </li>
+          </ul>
+
+          <ul data-bind="visible: menu('REGULARSEASON')" class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#/fullSchedule">Schedule</a>
+            </li>
+          -->
+    </ul>
+  </div>
+</nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="content" class="content"></div>
+    </div>
+    <script>
+      api = new GeneralManagerRestApi();
+      gameState = new Game();
+    </script>
+  </body>
+</html>
