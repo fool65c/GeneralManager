@@ -87,3 +87,12 @@ class Standings:
 
     def toJSON2(self):
         return {rank: team.toJSON() for rank, team in self.rankings.items()}
+
+    def teamRankLookup(self, team):
+        conf = team.division.conference.name
+        division = team.division.name
+
+        for rank, t in self.standings[conf][division].items():
+            if t.id == team.id:
+                return rank
+

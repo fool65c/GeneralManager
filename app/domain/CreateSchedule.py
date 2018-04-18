@@ -9,7 +9,6 @@ from app.domain.GameType import GameType
 from app.server import db
 from app.server import query
 from sqlalchemy import func
-from sqlalchemy import or_
 from random import choice, sample
 import copy
 
@@ -21,8 +20,8 @@ class CreateSchedule(object):
         self.post_season_teams = 12
         self.matchups = {}
         self.season = query(Season, func.max(Season.id)).first()[0]
-        standings = Standings()
-        self.standings = standings.standings
+        self.stand = Standings()
+        self.standings = self.stand.standings
         self.schedule = {}
         self.__init_matchups()
         self.teams = {t.id: t for t in query(Team).all()}
@@ -68,6 +67,7 @@ class CreateSchedule(object):
         for team_id, matchups in self.matchups.items():
             for matchupType in ['interconf',
                                 'divisionstart',
+                                'divisionend',
                                 'rank',
                                 'intraconf']:
                 for game in matchups[matchupType].values():
@@ -106,21 +106,32 @@ class CreateSchedule(object):
 
         self.__convert_matchups()
 
-        # schedule the games
-        # self.__conference_schedule_games('rank', [1], 4)
-        # self.__conference_schedule_games('divisionstart', [1], 4)
-        # self.__conference_schedule_games('rank', [1], 4)
-        # self.__conference_schedule_games('rank', [1, 4, 11, 12], 4)
         # setup the schedule
         for week in range(1, self.regular_season_weeks + 1):
             self.schedule[week] = {
                 'games': [],
                 'teams': set()
             }
+            self.schedule['teamsWithBye'] = set()
+
+        # schedule the games
         self.__rename_schedule_games('rank', 'divisionstart', 2, 2, [1, 4])
         self.__rename_schedule_games('divisionstart', 'intraconf',
-        #self.__rename_schedule_games('intraconf', 'divisionstart',
                                      2, 2, [2, 3])
+        self.__rename_schedule_games('divisionstart', 'interconf',
+                                     2, 2, [5, 6])
+        self.__rename_schedule_games('intraconf', 'interconf', 2, 2, [7, 8])
+        self.__rename_schedule_games('intraconf', 'interconf', 2, 2, [9, 10])
+        self.__rename_schedule_games('rank', 'dummy', 4, 0, [11])
+        self.__rename_schedule_games('interconf', 'dummy', 4, 0, [12])
+        self.__rename_schedule_games('intraconf', 'dummy', 4, 0, [13])
+        self.__rename_schedule_games('divisionend', 'dummy', 4, 0, [15])
+        self.__rename_schedule_games('divisionend', 'dummy', 4, 0, [16])
+        self.__rename_schedule_games('divisionend', 'dummy', 4, 0, [17])
+
+        for week in range(1, self.regular_season_weeks + 1):
+            print(week,
+                  len(self.schedule[week]['teams']))
 
     def __rename_schedule_games(self,
                                 matchupTypeA,
@@ -128,6 +139,7 @@ class CreateSchedule(object):
                                 desiredGamesA,
                                 desiredGamesB,
                                 weeks):
+        # tracks who if forced to play a different type game next week
         tracker = {}
         for week in weeks:
             tracker[week] = {
@@ -146,19 +158,18 @@ class CreateSchedule(object):
                         matchupTypeB: 0
                     }
 
-        for conf in self.league.keys():
-            for week in weeks:
-                for division, divTeams in self.league[conf].items():
-                    teams = set(list(divTeams.keys()))
-                    while len(teams) > 0:
-                        # print(teams)
+        for week in weeks:
+            allTeams = set(list(self.matchups.keys()))
+            while len(allTeams) > 0:
+                for conf in self.league.keys():
+                    for division, divTeams in self.league[conf].items():
+                        teams = set(list(divTeams.keys()))
                         teams -= self.schedule[week]['teams']
-                        # print(self.schedule[week]['teams'])
-                        # print(teams)
 
                         if len(teams) == 0:
                             print("all games for {} have been scheduled"
                                   .format(division))
+                            print(len(allTeams))
                             continue
 
                         countA = (scheduledGames[conf][division]
@@ -180,16 +191,28 @@ class CreateSchedule(object):
                         else:
                             # cry
                             raise Exception("CreateSchedule",
-                                            """{} has {} teams left,
-                                            but already used up game placement"""
-                                            .format(division, len(teams)))
+                                            ("{} has {} teams left,"
+                                             " but already used up game"
+                                             " placement".format(division,
+                                                                 len(teams))))
 
-                        # find a game
-                        for team in teams:
+                        # find a game by sorting teams by rank
+                        sortedTeams = []
+                        for team in self.standings[conf][division].values():
+                            if team.id in teams:
+                                sortedTeams.append(team.id)
+                        for team in sortedTeams:
                             if game is not None:
                                 break
-                            # print(self.matchups[team]['team'].city)
-                            for g in self.matchups[team][matchupType].values():
+
+                            # games = self.matchups[team][matchupType].values()
+                            games = sorted(self.matchups[team][matchupType]
+                                           .values(), key=lambda x: self.stand
+                                           .teamRankLookup(x.away)
+                                           if x.home.id == team
+                                           else self.stand
+                                           .teamRankLookup(x.home))
+                            for g in games:
                                 if g.home.id in self.schedule[week]['teams']:
                                     print(g.home.city, "scheduled for week",
                                           week)
@@ -210,8 +233,7 @@ class CreateSchedule(object):
                             for g in self.matchups[team][matchupType].values():
                                 print("possible games {} at {}"
                                       .format(g.away.city, g.home.city))
-                                teams.remove(team)
-                                continue
+                            raise Exception("CreateSchedule", "No Games")
 
                         # print(game)
                         print("Week: {} {} {} at {} {}".format(week,
@@ -233,23 +255,13 @@ class CreateSchedule(object):
                             nextWeek = weeks[nextWeekIndex]
                             tracker[nextWeek][forcedType].add(game.home.id)
                             tracker[nextWeek][forcedType].add(game.away.id)
-                            print(nextWeek, forcedType, game.home.city, game.away.city)
 
                         # cleanup
                         del self.matchups[game.home.id][matchupType][game.id]
                         del self.matchups[game.away.id][matchupType][game.id]
-                        teams.discard(game.home.id)
-                        teams.discard(game.away.id)
+                        allTeams.discard(game.home.id)
+                        allTeams.discard(game.away.id)
 
-                        # for all other teams to the forcedType for this week
-                        # for team in teams:
-                        #    if (team not in tracker[week][forcedType] and
-                        #       team not in tracker[week][matchupType]):
-                        #        tracker[week][forcedType].add(team)
-
-        for week in weeks:
-            print(week,
-                  len(self.schedule[week]['teams']))
 
     def __something(self, conf, division, matchupType, week):
             teams = set(list(self.league[conf][division].keys()))
