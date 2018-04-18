@@ -9,7 +9,7 @@ from app.domain.GameType import GameType
 from app.server import db
 from app.server import query
 from sqlalchemy import func
-from random import choice, sample
+from random import choice
 import copy
 
 
@@ -112,34 +112,46 @@ class CreateSchedule(object):
                 'games': [],
                 'teams': set()
             }
-            self.schedule['teamsWithBye'] = set()
 
         # schedule the games
-        self.__rename_schedule_games('rank', 'divisionstart', 2, 2, [1, 4])
-        self.__rename_schedule_games('divisionstart', 'intraconf',
-                                     2, 2, [2, 3])
-        self.__rename_schedule_games('divisionstart', 'interconf',
-                                     2, 2, [5, 6])
-        self.__rename_schedule_games('intraconf', 'interconf', 2, 2, [7, 8])
-        self.__rename_schedule_games('intraconf', 'interconf', 2, 2, [9, 10])
-        self.__rename_schedule_games('rank', 'dummy', 4, 0, [11])
-        self.__rename_schedule_games('interconf', 'dummy', 4, 0, [12])
-        self.__rename_schedule_games('intraconf', 'dummy', 4, 0, [13])
-        self.__rename_schedule_games('divisionend', 'dummy', 4, 0, [15])
-        self.__rename_schedule_games('divisionend', 'dummy', 4, 0, [16])
-        self.__rename_schedule_games('divisionend', 'dummy', 4, 0, [17])
+        self.__schedule_games('rank', 'divisionstart', 2, 2, [1, 4])
+        self.__schedule_games('divisionstart', 'intraconf', 2, 2, [2, 3])
+        self.__schedule_games('divisionstart', 'interconf', 2, 2, [5, 6])
+        self.__schedule_games('intraconf', 'interconf', 2, 2, [7, 8])
+        self.__schedule_games('intraconf', 'interconf', 2, 2, [9, 10])
+        self.__schedule_games('intraconf', 'dummy', 4, 0, [11])
+        self.__schedule_games('interconf', 'rank', 2, 2, [13, 14])
+        self.__schedule_games('divisionend', 'dummy', 4, 0, [15])
+        self.__schedule_games('divisionend', 'dummy', 4, 0, [16])
+        self.__schedule_games('divisionend', 'dummy', 4, 0, [17])
 
+        self.__create_bye_weeks([7, 8, 9, 10, 13, 14], 11, 12)
+
+        check = {}
+        for team in self.teams:
+            check[team] = {
+                'count': 0,
+                'week': set()
+            }
         for week in range(1, self.regular_season_weeks + 1):
-            print(week,
-                  len(self.schedule[week]['teams']))
+            for game in self.schedule[week]['games']:
+                check[game.home.id]['count'] += 1
+                check[game.away.id]['count'] += 1
+                if week in check[game.home.id]['week']:
+                    print("OH BOY")
+                else:
+                    check[game.home.id]['week'].add(week)
+                if week in check[game.away.id]['week']:
+                    print("OH BOY")
+                else:
+                    check[game.away.id]['week'].add(week)
+        for team in check:
+            print(self.matchups[team]['team'].city, check[team])
 
-    def __rename_schedule_games(self,
-                                matchupTypeA,
-                                matchupTypeB,
-                                desiredGamesA,
-                                desiredGamesB,
-                                weeks):
-        # tracks who if forced to play a different type game next week
+    def __schedule_games(self, matchupTypeA, matchupTypeB,
+                         desiredGamesA, desiredGamesB,
+                         weeks):
+        # tracks who is forced to play a different type game next week
         tracker = {}
         for week in weeks:
             tracker[week] = {
@@ -262,56 +274,62 @@ class CreateSchedule(object):
                         allTeams.discard(game.home.id)
                         allTeams.discard(game.away.id)
 
+    def __create_bye_weeks(self, weeks, overBookedWeek, emptyWeek):
+        """This assumes that there is an empty week with no games scheduled
+        and that week also has teams on a bye
+        and that overBookedWeek has half its games and has teams on bye"""
+        teamsOnBye = len(self.teams) / (len(weeks) + 2)
+        teamsWithBye = set()
 
-    def __something(self, conf, division, matchupType, week):
-            teams = set(list(self.league[conf][division].keys()))
-            teams -= self.schedule[week]['teams']
+        gameCount = 0
+        for index, game in enumerate(self.schedule[overBookedWeek]['games']):
+            if gameCount % 2 == 0:
+                self.schedule[emptyWeek]['games'].append(game)
+                self.schedule[emptyWeek]['teams'].add(game.home.id)
+                self.schedule[emptyWeek]['teams'].add(game.away.id)
+                self.schedule[overBookedWeek]['teams'].remove(game.home.id)
+                self.schedule[overBookedWeek]['teams'].remove(game.away.id)
+                del self.schedule[overBookedWeek]['games'][index]
 
-            team_id = sample(teams, 1)[0]
-            team = self.league[conf][division][team_id]
-            print(team)
+        for week in weeks:
+            weekByes = 0
+            for index, game in enumerate(self.schedule[week]['games']):
+                if game.home.id in teamsWithBye:
+                    print("{} already has bye week".format(game.home.city))
+                    continue
+                if game.away.id in teamsWithBye:
+                    print("{} already has bye week".format(game.away.city))
+                    continue
+                if weekByes >= teamsOnBye:
+                    print("Week {} has enough bye weeks".format(week))
+                    break
 
-            # find a game where both home and away are not playing in weekA
-            possibleGames = filter(lambda x: x.home.id
-                                   not in self.schedule[week]['teams']
-                                   and x.away.id
-                                   not in self.schedule[week]['teams'],
-                                   self.matchups[team.id]
-                                   [matchupType].values())
-            possibleGames = list(possibleGames)
-            if len(possibleGames) == 0:
-                raise Exception("CreateSchedule", "Can not find game")
+                sourceWeek = None
+                if (game.home.id
+                   not in self.schedule[overBookedWeek]['teams'] and
+                   game.away.id
+                   not in self.schedule[overBookedWeek]['teams']):
+                    sourceWeek = overBookedWeek
 
-            # add the game to the schedule
-            game = choice(possibleGames)
-            self.schedule[week]['games'].append(game)
-            self.schedule[week]['teams'].add(game.home.id)
-            self.schedule[week]['teams'].add(game.away.id)
+                if (game.home.id
+                   not in self.schedule[emptyWeek]['teams'] and
+                   game.away.id
+                   not in self.schedule[emptyWeek]['teams']):
+                    sourceWeek = emptyWeek
 
-            # delete the game
-            del self.matchups[game.home.id][matchupType][game.id]
-            del self.matchups[game.away.id][matchupType][game.id]
-            teams.remove(game.home.id)
-            teams.remove(game.away.id)
-
-
-
-
-
-
-
-
-        # Div1 pick one game from random division
-        # remaining teams must play rank games one vs another division (div2) and one vs  (div3)
-        # div2 2 plays one game vs div 4, div 3 plays one game vs div 4
-        # div2,3,4 remaining 
-        # intra(div4)
-        # div2 remaining teams play conference
-        # division not played 
-
-
-
-
+                if sourceWeek is not None:
+                    print("moving {} at {}".format(game.away.city,
+                                                   game.home.city))
+                    self.schedule[sourceWeek]['games'].append(game)
+                    self.schedule[sourceWeek]['teams'].add(game.home.id)
+                    self.schedule[sourceWeek]['teams'].add(game.away.id)
+                    self.schedule[week]['teams'].remove(game.home.id)
+                    self.schedule[week]['teams'].remove(game.away.id)
+                    del self.schedule[week]['games'][index]
+                    teamsWithBye.add(game.home.id)
+                    teamsWithBye.add(game.away.id)
+                    weekByes += 2
+                    continue
 
     def __flip_flop_divisional_games(self, source, dest):
         for team_id in self.matchups:
@@ -347,10 +365,7 @@ class CreateSchedule(object):
             game = Game(team, opp)
             game_fix = db.session.merge(game)
             db.session.add(game_fix)
-            
-            #self.matchups[team.id][matchupType].append(game_fix)
-            #db.session.commit()
-            #            print(game_fix.id)
+
             self.matchups[team.id][matchupType].append(game_fix)
 
             # remove the respective divisions for future games
