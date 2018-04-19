@@ -5,9 +5,6 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import func
 from app.domain.Game import Game
-from app.domain.Conference import Conference
-from app.domain.Division import Division
-from app.domain.Team import Team
 from app.domain.Standings import Standings
 from app.domain.GameType import GameType
 from app.domain.Result import Result
@@ -63,99 +60,10 @@ class Schedule(Base):
             db.session.commit()
 
 
-class CreateSchedule(object):
+class CreatePostSeasonSchedule(object):
     def __init__(self):
         self.regular_season_weeks = 16
         self.post_season_teams = 8
-
-    def __newSchedule(self):
-        self.regular_season_weeks = 17
-
-        self.regular_season_weeks = 16
-
-    def createRegularSeasonSchedule(self, teams=None):
-        if query(Schedule).count() != 0:
-            return
-
-        gameType = query(GameType).filter_by(game_type="regular season") \
-                                  .first()
-
-        # 17 week season, 16 games
-        # first 3 game division
-        # last 3 games division
-        # 4 bye weeks per week starting week 5
-        # 4 games vs another division in conference 2 home 2 away
-        # 4 games vs another division not in conference 2 home 2 away
-        # 2 games vs ranked (not in above) one at home 1 on the road
-
-        # for team add opponents 
-            # 5 catagories
-            # home, away, tossup
-            # 3 home, 3 away, 10 tossup, 1 bye week NONE, weeks open (range 1, 18)
-
-        # start with one team
-            # move half tossup into home half away
-            # make sure other team is balanced
-            # adjust other 10 teams
-            # add bye week
-
-        # TODO CHANGE RANKINGS TO HAVE FULL DOMAIN CLASSES
-        # go through each division
-            # week 15 1 3, home 2, 4 away
-            # week 16 2, 4 home 1, 3 away
-            # week 17 3, 1 home, 2, 4 away
-            # foreach week choice 1, 5 to reverse
-                # if week alreay taken remove week and choice again
-
-        # weeks 1 - 5
-            # foreach team fill holes
-
-        # weeks 6 - 14
-            # first 4 teams get byes
-            # foreach team fill holes
-            # if week can't be filled
-                # and team dosne't have a bye week yet
-                # team bye week
-                # if bye week already taken see if matchup is availiable on bye week
-                    # swap
-                # else
-                    # cry
-
-
-
-            # remove from opponents where approporate
-
-        # weeks 1-5
-            # 
-
-
-
-
-        if teams is None:
-            teams = query(Team).all()
-
-        if len(teams) % 2 == 1 and len(teams):
-            teams.append(None)
-
-        count = len(teams)
-        half = int(count / 2)
-
-        for turn in range(self.regular_season_weeks):
-            left = teams[:half]
-            right = teams[count - half - 1 + 1:][::-1]
-            pairings = zip(left, right)
-            if turn % 2 == 1:
-                pairings = [(y, x) for (x, y) in pairings]
-            teams.insert(1, teams.pop())
-            for pair in pairings:
-                if pair[0] is None or pair[1] is None:
-                    print("BYE WEEK SON")
-                else:
-                    game = Game(pair[0], pair[1])
-                    db.session.add(game)
-                    schedule = Schedule(turn + 1, gameType, game)
-                    db.session.add(schedule)
-        db.session.commit()
 
     def advancePostSeasonSchedule(self):
         standings = Standings()

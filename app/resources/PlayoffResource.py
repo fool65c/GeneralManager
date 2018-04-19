@@ -1,6 +1,6 @@
 from flask_restful import Resource
 from app.domain.Schedule import Schedule
-from app.domain.Schedule import CreateSchedule
+from app.domain.PostSeasonSchedule import PostSeasonSchedule
 from app.domain.Playoff import Playoff
 from app.domain.GameType import GameType
 from app.server import query
@@ -24,7 +24,7 @@ class PlayoffsNextWeekResource(Resource):
         for game in games:
             game.play()
 
-        postSeason = CreateSchedule()
+        postSeason = PostSeasonSchedule()
         postSeason.advancePostSeasonSchedule()
 
         return Playoff().toJSON()

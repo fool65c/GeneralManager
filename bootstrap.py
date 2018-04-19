@@ -8,7 +8,6 @@ from app.domain.Champions import Champions
 from app.domain.Season import Season
 from app.domain.History import History
 from app.domain.Schedule import Schedule
-from app.domain.CreateSchedule import CreateSchedule
 from app.domain.Result import Result
 from app.domain.Phase import Phase
 from app.domain.State import State
@@ -135,6 +134,3 @@ phase = Phase("OFFSEASON", "offseason")
 db.session.add(phase)
 
 db.session.commit()
-
-createSchedule = CreateSchedule()
-createSchedule.createRegularSeasonSchedule()
