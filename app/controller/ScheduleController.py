@@ -5,7 +5,7 @@ from app.server import query
 from app.server import db
 
 
-def CreateScheduleController(teams=None):
+def CreateScheduleController():
     state = query(State).first()
 
     if state.phase.phase != "GENERATE_SCHEDULE":

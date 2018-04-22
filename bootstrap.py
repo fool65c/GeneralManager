@@ -2,7 +2,6 @@ from app.server import db
 from app.domain.Conference import Conference
 from app.domain.Division import Division
 from app.domain.Team import Team
-from app.domain.GameType import GameType
 from app.domain.Game import Game
 from app.domain.Champions import Champions
 from app.domain.Season import Season
@@ -10,6 +9,7 @@ from app.domain.History import History
 from app.domain.Schedule import Schedule
 from app.domain.Result import Result
 from app.domain.Phase import Phase
+from app.domain.Playoff import Playoff
 from app.domain.State import State
 from app.domain import initialize_sql
 import random
@@ -112,12 +112,6 @@ addTeam("San Diego", nfc_w)
 addTeam("San Francisco", nfc_w)
 addTeam("Seattle", nfc_w)
 
-
-print("Creating GameType")
-gameType = GameType("regular season")
-db.session.add(gameType)
-gameType = GameType("post season")
-db.session.add(gameType)
 
 print("Creating Game Phases")
 phase = Phase("NEWGAME", "newGame")

@@ -1,7 +1,7 @@
-from app.domain.GameType import GameType
 from app.domain.Champions import Champions
 from app.domain.Schedule import Schedule
 from app.domain.History import History
+from app.domain.Playoff import Playoff
 from app.domain.Season import Season
 from app.domain.Team import Team
 from app.server import query
@@ -12,20 +12,17 @@ import random
 
 def OffseasonController():
     # Set Champion
-    gT = query(GameType).filter_by(game_type="post season").first()
     season = query(Season,
                    func.max(Season.id)).first()[0]
-    chapionshipGame = query(Schedule,
-                            func.max(Schedule.week)) \
-                            .filter_by(game_type=gT).first()[0]
+    championshipRound = query(Playoff).filter_by(playoff_round=4).first()
+    championshipGame = championshipRound.game
+    championshipResult = championshipRound.result
 
     champion = None
-    if chapionshipGame.result.home_score > chapionshipGame.result.away_score:
-        champion = Champions(chapionshipGame.game.home,
-                             season)
+    if championshipResult.home_score > championshipResult.away_score:
+        champion = Champions(championshipGame.home, season)
     else:
-        champion = Champions(chapionshipGame.game.away,
-                             season)
+        champion = Champions(championshipGame.away, season)
     db.session.add(champion)
 
     teams = query(Team).all()
@@ -61,6 +58,7 @@ def OffseasonController():
 
     # Clear Schedule
     query(Schedule).delete()
+    query(Playoff).delete()
 
     # Advance Season
     nextSeason = Season("Season {}".format(season.id + 1))

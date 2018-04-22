@@ -1,17 +1,14 @@
 from flask_restful import Resource
 from app.domain.Schedule import Schedule
-from app.domain.GameType import GameType
 from app.server import query
 from sqlalchemy import func
 
 
 class PlayNextWeekResource(Resource):
     def get(self):
-        gT = query(GameType).filter_by(game_type="regular season").first()
         maxWeek = query(Schedule,
                         func.min(Schedule.week)) \
-                        .filter_by(result=None) \
-                        .filter_by(game_type=gT).first()
+                        .filter_by(result=None).first()
         nextWeek = maxWeek[1]
         if nextWeek is None:
             return []
@@ -28,11 +25,9 @@ class PlayNextWeekResource(Resource):
 class GetNextWeekResource(Resource):
     def get(self, team_id):
         team_id = int(team_id)
-        gT = query(GameType).filter_by(game_type="regular season").first()
         maxWeek = query(Schedule,
                         func.min(Schedule.week)) \
-                        .filter_by(result=None) \
-                        .filter_by(game_type=gT).first()
+                        .filter_by(result=None).first()
         nextWeek = maxWeek[1]
 
         if nextWeek is None:

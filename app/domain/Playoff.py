@@ -1,48 +1,28 @@
-from app.domain.Schedule import Schedule
-from app.domain.GameType import GameType
-from app.server import query
-from sqlalchemy import func
+from app.domain import Base
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 
-class Playoff(object):
-    def __init__(self):
-        self.playoffs = []
-        gT = query(GameType).filter_by(game_type="post season").first()
+class Playoff(Base):
+    __tablename__ = 'playoff'
+    id = Column(Integer, primary_key=True)
+    rank = Column(Integer, nullable=False)
+    playoff_round = Column(Integer, nullable=False)
+    team_id = Column(Integer, ForeignKey('team.id'), nullable=False)
+    team = relationship("Team", foreign_keys=[team_id])
+    conf_id = Column(Integer, ForeignKey('conference.id'), nullable=False)
+    conf = relationship("Conference", foreign_keys=[conf_id])
+    game_id = Column(Integer, ForeignKey('game.id'), nullable=True)
+    game = relationship("Game", foreign_keys=[game_id])
+    result_id = Column(Integer, ForeignKey("result.id"), nullable=True)
+    result = relationship("Result", foreign_keys=[result_id])
 
-        firstWeek = query(Schedule,
-                          func.min(Schedule.week)).filter_by(game_type=gT) \
-                                                  .first()[1]
-        playoffWeek = firstWeek
-        while True:
-            games = query(Schedule).filter_by(game_type=gT) \
-                                    .filter_by(week=playoffWeek) \
-                                    .all()
-            if len(games) == 0:
-                break
-
-            self.playoffs.append([games])
-            playoffWeek += 1
-
-    def toJSON(self):
-        results = {
-            "teams": [],
-            "results": []
-        }
-
-        for games in self.playoffs[0]:
-            for game in games:
-                results["teams"].append([game.game.home.city,
-                                         game.game.away.city])
-
-        for playoffWeek in self.playoffs:
-            weekResults = []
-            for games in playoffWeek:
-                for game in games:
-                    if game.result is None:
-                        weekResults.append([])
-                    else:
-                        weekResults.append([game.result.home_score,
-                                            game.result.away_score])
-            results["results"].append(weekResults)
-
-        return results
+    def __init__(self, conf, team, playoff_round, rank, game, result=None):
+        self.conf = conf
+        self.team = team
+        self.rank = rank
+        self.playoff_round = playoff_round
+        self.game = game
+        self.result = result

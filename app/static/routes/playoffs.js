@@ -13,7 +13,7 @@ function playoffs() {
           { href: '#/rankings', text: 'Rankings'}
         ]);
 
-        self.rounds = Math.log2(playoffSchedule.teams.length * 2);
+        self.rounds = 4
         self.playoffsOver = ko.observable(false);
 
         self.updatePlayoffSchedule = function (playoffSchedule) {
@@ -25,10 +25,10 @@ function playoffs() {
             init: playoffSchedule
           });
             
-          console.log(playoffSchedule.results[ playoffSchedule.results.length -1])
+          console.log(playoffSchedule.results[self.rounds -1])
           if (self.rounds > playoffSchedule.results.length) {
             self.playoffsOver(false)
-          } else if (playoffSchedule.results[ playoffSchedule.results.length -1][0].length == 0) {
+          } else if (playoffSchedule.results[self.rounds -1][0][0] == null) {
             self.playoffsOver(false)
           } else {
             self.playoffsOver(true)

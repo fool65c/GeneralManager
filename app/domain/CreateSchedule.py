@@ -1,11 +1,8 @@
 from app.domain.Game import Game
-# from app.domain.Conference import Conference
-# from app.domain.Division import Division
 from app.domain.Team import Team
 from app.domain.Standings import Standings
 from app.domain.Season import Season
 from app.domain.Schedule import Schedule
-from app.domain.GameType import GameType
 from app.server import db
 from app.server import query
 from sqlalchemy import func
@@ -129,12 +126,10 @@ class CreateSchedule(object):
         self.__create_bye_weeks([7, 8, 9, 10, 13, 14], 11, 12)
 
         # add the games to the db
-        gameType = query(GameType).filter_by(game_type="regular season") \
-                                  .first()
         for week in self.schedule:
             for game in self.schedule[week]['games']:
                 # print(game.id, week)
-                schedule = Schedule(week, gameType, game)
+                schedule = Schedule(week, game)
                 db.session.add(schedule)
 
         db.session.commit()

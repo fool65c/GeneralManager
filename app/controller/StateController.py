@@ -1,10 +1,9 @@
 from app.controller.ScheduleController import CreateScheduleController
 from app.controller.ScheduleController import CreatePlayoffsController
 from app.controller.OffseasonController import OffseasonController
-from app.controller.OffseasonController import PrepRankingsController
 from app.domain.Phase import Phase
-from app.domain.Standings import Standings
 from app.domain.Schedule import Schedule
+from app.domain.Playoff import Playoff
 from app.domain.State import State
 from app.server import query
 from app.server import db
@@ -12,6 +11,13 @@ from app.server import db
 
 def VerifyState(state):
     gamesLeft = query(Schedule).filter_by(result=None).all()
+    playoffsLeftList = query(Playoff).filter_by(result=None).all()
+    playoffsLeft = False
+    # ignore the bye weeks
+    for playoff in playoffsLeftList:
+        if playoff.game is not None:
+            playoffsLeft = True
+            break
 
     if state is None:
         newGamePhase = query(Phase).filter_by(phase="NEWGAME").first()
@@ -24,14 +30,13 @@ def VerifyState(state):
         state.advancePhase()
         db.session.commit()
         state = CreatePlayoffsController()
-    elif len(gamesLeft) == 0 and state.phase.phase == "POSTSEASON":
+    elif not playoffsLeft and state.phase.phase == "POSTSEASON":
         state.advancePhase()
         OffseasonController()
         db.session.commit()
     elif state.phase.phase == "OFFSEASON":
         startOver = query(Phase).filter_by(phase="GENERATE_SCHEDULE").first()
-        teams = PrepRankingsController(Standings())
         state.phase = startOver
         db.session.commit()
-        state = CreateScheduleController(teams)
+        state = CreateScheduleController()
     return state
