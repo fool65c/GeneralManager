@@ -24,7 +24,7 @@ function routeTeamSchedule() {
             if (s.game.result) {
               home += " " + s.game.result.home_score;
               away += " " + s.game.result.away_score;
-              if (s.game.game.home.id = gameState.state.team.id) {
+              if (s.game.game.home.id == gameState.state.team.id) {
                 result = s.game.result.home_score > s.game.result.away_score ? "Win" : "Loss";
               } else {
                 result = s.game.result.home_score < s.game.result.away_score ? "Win" : "Loss";
