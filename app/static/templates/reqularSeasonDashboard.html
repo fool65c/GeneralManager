@@ -83,7 +83,7 @@
   <!-- Last Week -->
   <div class="col-4"> 
     <div class="card">
-      <h5 class="card-header">Last Week</h5>
+      <h5 class="card-header" data-bind="text: 'Last Week ' + lastWeekResult()">Last Week</h5>
       <div class="card-body">
       <!-- bye week -->
         <p class="card-text" data-bind="visible: $root.wasByeWeek">Bye Week</p>

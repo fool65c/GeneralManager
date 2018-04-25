@@ -12,6 +12,7 @@ function seasonDashboard() {
       self.startPlayoffs = ko.observable(false);
       //last Game block
       self.lastGame = ko.observable();
+      self.lastWeekResult = ko.observable("");
       self.wasByeWeek = ko.observable(false);
 
       function updateDashboard() {
@@ -40,14 +41,22 @@ function seasonDashboard() {
 
         api.getLastWeek(gameState.state.team.id).then(function(lastWeek) {
             console.log(lastWeek)
+
           if (lastWeek == "Bye Week") {
             self.wasByeWeek(true);
+            self.lastWeekResult("");
             self.lastGame([]);
           } else if (lastWeek == "Season not started") {
             self.wasByeWeek(false);
+            self.lastWeekResult("");
             self.lastGame([]);
           } else {
             self.wasByeWeek(false);
+            if (lastWeek.game.home.id == gameState.state.team.id) {
+              self.lastWeekResult(lastWeek.result.home_score > lastWeek.result.away_score ? "Win" : "Loss");
+            } else {
+              self.lastWeekResult(lastWeek.result.home_score < lastWeek.result.away_score ? "Win" : "Loss");
+            }
             self.lastGame([lastWeek]);
           }
         });
