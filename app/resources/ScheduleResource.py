@@ -1,7 +1,9 @@
 from flask_restful import Resource
 from app.domain.Schedule import Schedule
 from app.server import query
+from app.server import db
 from sqlalchemy import func
+from sqlalchemy import or_
 
 
 class PlayNextWeekResource(Resource):
@@ -17,8 +19,8 @@ class PlayNextWeekResource(Resource):
 
         for game in games:
             game.play()
+        db.session.commit()
 
-        games = query(Schedule).filter_by(week=nextWeek).all()
         return [game.toJSON() for game in games]
 
 
@@ -83,10 +85,28 @@ class PlayRegularSeasonResource(Resource):
         games = query(Schedule).all()
         for game in games:
             game.play()
+        db.session.commit()
 
-        games = query(Schedule).all()
         return [game.toJSON() for game in games]
 
+
+class GetTeamRegularSeasonResource(Resource):
+    def get(self, team_id):
+        schedule = []
+        games = query(Schedule).order_by(Schedule.week).all()
+
+        for game in games:
+            print(game.game.home.id, team_id)
+            team_id = int(team_id)
+            if(game.game.home.id == team_id or
+               game.game.away.id == team_id):
+                print("HERE")
+                schedule.append({
+                    'week': game.week,
+                    'game': game.toJSON()
+                })
+
+        return schedule
 
 class GetRegularSeasonResource(Resource):
     def get(self):

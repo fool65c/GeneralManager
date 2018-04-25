@@ -47,5 +47,3 @@ class Schedule(Base):
             self.game.home.points_against += self.result.away_score
             self.game.away.points_for += self.result.away_score
             self.game.away.points_against += self.result.home_score
-
-            db.session.commit()

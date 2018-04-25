@@ -11,6 +11,11 @@ var routes = [
     function: 'routeFullSchedule'
   },
   {
+    script: '/routes/teamSchedule.js',
+    route: '/teamSchedule',
+    function: 'routeTeamSchedule'
+  },
+  {
     script: '/routes/dashboard.js',
     route: '/dashboard',
     function: 'seasonDashboard'

@@ -3,20 +3,6 @@ function seasonDashboard() {
     function display() {
       var self = this;
 
-      gameState.setMenu([
-        { href: '#/regularSeason',
-          text: 'Dashboard'
-        },
-        {
-          href: '#/fullSchedule',
-          text: 'Schedule'
-        },
-        {
-          href: '#/rankings',
-          text: 'Rankings'
-        }
-      ]);
-
       //team block
       self.team = ko.observable({});
       //next Game block

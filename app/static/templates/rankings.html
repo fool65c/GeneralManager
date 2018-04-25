@@ -2,26 +2,35 @@
   <div class="row justify-content-center">
     <div class="col-2">League Rankings</div>
   </div>
-  <div class="col-8 offset-2">
-    <table class="table table-striped">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Rank</th>
-          <th scope="col">Team</th>
-          <th scope="col">Record</th>
-          <th scope="col">Points For</th>
-          <th scope="col">Points Against</th>
-        </tr>
-      </thead>
-      <tbody data-bind="foreach: _.keys(rankings())">
-        <tr> 
-          <td data-bind="text: $data"></td>
-          <td data-bind="text: $root.rankings()[$data].city"></td>
-          <td data-bind="text: $root.rankings()[$data].wins + ' - ' + $root.rankings()[$data].losses"></td>
-          <td data-bind="text: $root.rankings()[$data].points_for"></td>
-          <td data-bind="text: $root.rankings()[$data].points_against"></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="row justify-content-center"
+    data-bind="foreach: { data: rankings(), as: 'conf' }">
+    <div class="col-6">
+      <div class="card" style="">
+        <h5 class="card-title" data-bind="text: conf.conference"></h5>
+        <div data-bind="foreach: {data: divisions, as: 'division'}">
+          <h6 class="card-subtitle mb-2 text-muted" data-bind="text: division"></h6>
+          <table class="table table-striped">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">Team</th>
+                <th scope="col">Record</th>
+                <th scope="col">Points For</th>
+                <th scope="col">Points Against</th>
+              </tr>
+            </thead>
+            <tbody data-bind="foreach: {data: teams, as: 'rank'}">
+              <tr> 
+                <td data-bind="text: rank"></td>
+                <td data-bind="text: team.city"></td>
+                <td data-bind="text: team.wins + ' - ' + team.losses"></td>
+                <td data-bind="text: team.points_for"></td>
+                <td data-bind="text: team.points_against"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

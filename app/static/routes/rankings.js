@@ -1,16 +1,12 @@
 function rankings() { 
   $('div.content').load('templates/rankings.html', function(){
-    function display() {
-      var self = this;
+    
+    api.getTeamRankings().then(function(rankings) {
+      var viewModel = {
+        rankings: ko.observableArray(rankings)
+      }
+      ko.applyBindings(viewModel, document.getElementById('rankings'));
 
-      self.rankings = ko.observable();
-
-      api.getTeamRankings().then(function(rankings) {
-        console.log(rankings);
-        self.rankings(rankings);
-      });
-    }
-
-    ko.applyBindings(new display(), document.getElementById('rankings'));
+    });
   });
 }

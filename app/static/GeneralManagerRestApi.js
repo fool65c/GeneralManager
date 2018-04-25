@@ -23,6 +23,10 @@ class GeneralManagerRestApi {
     return this.getJSON('/api/schedule');
   }
 
+  getTeamSchedule(team_id) {
+    return this.getJSON('/api/schedule/{0}'.format(team_id));
+  }
+
   playRegularSeason() {
     return this.getJSON('/api/schedule/play');
   }

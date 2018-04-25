@@ -6,8 +6,6 @@ function routeNewGame() {
       function display() {
         var self = this;
         self.teams = teams;
-        gameState.setMenu([{ href: '#/newGame', text: 'Select Team'}]);
-
         self.resularSeason = false;
         self.selectTeam = function(team) { 
           api.setTeam(team.id).then(function() {

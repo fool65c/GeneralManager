@@ -3,15 +3,8 @@ function playoffs() {
     $('div.content').load('templates/playoffs.html', function(){
       console.log(playoffSchedule)
 
-
-
       function display() {
         var self = this;
-
-        gameState.setMenu([
-          { href: '#/playoffs', text: 'Playoffs'},
-          { href: '#/rankings', text: 'Rankings'}
-        ]);
 
         self.rounds = 4
         self.playoffsOver = ko.observable(false);

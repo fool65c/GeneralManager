@@ -3,20 +3,6 @@ function routeFullSchedule() {
     function display() {
       var self = this;
 
-      gameState.setMenu([
-        { href: '#/regularSeason',
-          text: 'Dashboard'
-        },
-        {
-          href: '#/fullSchedule',
-          text: 'Schedule'
-        },
-        {
-          href: '#/rankings',
-          text: 'Rankings'
-        }
-      ]);
-
       self.schedule = ko.observable();
       self.weeksLeft = ko.observable();
 

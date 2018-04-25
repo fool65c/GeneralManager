@@ -2,6 +2,7 @@ from pathlib import Path
 from app.server import app, api
 from app.resources.TeamResource import TeamResource
 from app.resources.TeamResource import TeamsResource
+from app.resources.ScheduleResource import GetTeamRegularSeasonResource
 from app.resources.ScheduleResource import GetRegularSeasonResource
 from app.resources.ScheduleResource import PlayNextWeekResource
 from app.resources.ScheduleResource import PlayRegularSeasonResource
@@ -29,6 +30,7 @@ api.add_resource(TeamResource, '/api/team/<team_id>')
 api.add_resource(TeamsResource, '/api/team')
 
 api.add_resource(GetRegularSeasonResource, '/api/schedule')
+api.add_resource(GetTeamRegularSeasonResource, '/api/schedule/<team_id>')
 api.add_resource(PlayRegularSeasonResource, '/api/schedule/play')
 api.add_resource(GetNextWeekResource, '/api/schedule/nextWeek/<team_id>')
 api.add_resource(GetLastWeekResource, '/api/schedule/lastWeek/<team_id>')

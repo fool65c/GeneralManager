@@ -1,38 +1,48 @@
-class Game {
-  constructor() {
-    this.state = {};
-    this.menuFunction = function() { return false; }
-    var game = this;
-    this.menu = ko.observable();
+gameState = {}
 
-    var navControl = {
-      menu: game.menu
-    }
+gameState.menu = ko.observable();
+ko.applyBindings({menu: gameState.menu}, document.getElementById('navagaion'));
 
-    ko.applyBindings(navControl, document.getElementById('navagaion'));
+gameState.start = function() {
+  $(document).ready(function() {
+    hasher.setHash('');
+    crossroads.resetState();
+    gameState.advance();
+  });
+}  
+  
+gameState.advance = function() {
+  api.getState().then(function(state) {
+    console.log(state);
+    gameState.state = state;
+    gameState.updateMenu();
+    hasher.setHash(state.phase.route);
+  });
+}
+
+gameState.updateMenu= function() {
+  var newMenu;
+  switch(gameState.state.phase.phase) {
+    case "NEWGAME":
+      newMenu = [{ href: '#/newGame', text: 'Select Team'}];
+      break;
+    case "REGULARSEASON":
+      newMenu = [
+        {href: '#/regularSeason', text: 'Dashboard'},
+        {href: '#/teamSchedule', text: 'Team Schedule'},
+        {href: '#/fullSchedule', text: 'League Schedule'},
+        {href: '#/rankings', text: 'Rankings'}
+      ];
+      break;
+    case "POSTSEASON":
+      newMenu = [
+        { href: '#/playoffs', text: 'Playoffs'},
+        { href: '#/rankings', text: 'Rankings'}
+      ];
+      break;
+    default:
+      newMenu = [];
+      break;
   }
-
-  setMenu(menu) {
-    this.menu(menu);
-  }
-
-  start() {
-    var game = this;
-    $(document).ready(function() {
-
-      hasher.setHash('');
-      crossroads.resetState();
-
-      game.advance();
-    });
-  }  
-
-  advance() {
-    var game = this;
-    api.getState().then(function(state) {
-      console.log(state);
-      game.state = state;
-      hasher.setHash(state.phase.route);
-    });
-  }
+  this.menu(newMenu);
 }
