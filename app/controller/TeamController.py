@@ -1,6 +1,7 @@
 from app.controller.StateController import VerifyState
 from app.domain.Team import Team
 from app.domain.State import State
+from app.domain.roster.Roster import Roster
 from app.server import query
 from app.server import db
 
@@ -14,6 +15,9 @@ def SetTeam(team_id):
     state = query(State).first()
     print(state.toJSON())
     state.setTeam(team)
+
+    Roster.assignPlayers(team)
+
     db.session.commit()
 
     VerifyState(state)
