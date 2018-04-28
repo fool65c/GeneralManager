@@ -18,7 +18,7 @@ class Roster:
             else:
                 statusText = "Bench"
             if statusText not in roster:
-                roster[statusText] = []
+                roster[statusText] = {}
 
             for position, players in groupby(allPlayers,
                                              lambda p:
@@ -31,10 +31,8 @@ class Roster:
                                                    .getSpecialTeamsWeight())
                                                 ),
                                  reverse=True)
-                roster[statusText].append({
-                    'position': position,
-                    'players':  [p.player.toJSON() for p in players]
-                })
+                roster[statusText][position] = [p.player.toJSON()
+                                                for p in players]
         return roster
 
     @staticmethod

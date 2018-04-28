@@ -29,9 +29,14 @@ gameState.updateMenu= function() {
     case "REGULARSEASON":
       newMenu = [
         {href: '#/regularSeason', text: 'Dashboard'},
-        {href: '#/teamSchedule', text: 'Team Schedule'},
-        {href: '#/fullSchedule', text: 'League Schedule'},
-        {href: '#/rankings', text: 'Rankings'}
+        {text: 'Team', items: [
+          {href: '#/teamRoster', text: 'Roster'},
+          {href: '#/teamSchedule', text: 'Schedule'}
+        ]},
+        {text: 'League', items: [
+          {href: '#/fullSchedule', text: 'Schedule'},
+          {href: '#/rankings', text: 'Rankings'}
+        ]}
       ];
       break;
     case "POSTSEASON":

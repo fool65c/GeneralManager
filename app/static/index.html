@@ -62,8 +62,20 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul data-bind="foreach: menu" class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item active" data-bind="ifnot: $data.items">
               <a class="nav-link" data-bind="attr: {href: $data.href}, text: $data.text"></a>
+            </li>
+            <li class="nav-item dropdown" data-bind="if: $data.items">
+              <a class="nav-link dropdown-toggle"
+                href="#" id="navbarDropdown" 
+                role="button" data-toggle="dropdown" 
+                aria-haspopup="true" aria-expanded="false"
+                data-bind="text: $data.text">
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown"
+                data-bind="foreach: $data.items">
+                <a class="dropdown-item" data-bind="attr: {href: $data.href}, text: $data.text"></a>
+              </div>
             </li>
           </ul>
 

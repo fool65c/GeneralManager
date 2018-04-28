@@ -11,6 +11,10 @@ class GeneralManagerRestApi {
     return this.getJSON('/api/team');
   }
 
+  getTeamRoster(team_id) {
+    return this.getJSON('/api/team/{0}/roster'.format(team_id));
+  }
+
   setTeam(team_id) {
     return this.postJSON('/api/team', {"team_id": team_id})
   }
