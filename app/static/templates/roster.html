@@ -1,27 +1,33 @@
 <div id="roster">
-  <table class="table table-striped">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Position</th>
-        <th scope="col">Name</th>
-        <th scope="col">Age</th>
-        <th scope="col">Position Ability</th>
-        <th scope="col">Speed</th>
-        <th scope="col">Strength</th>
-        <th scope="col">Starter</th>
-      </tr>
-      </thead>
-      <tbody data-bind="foreach: {data: roster, as: 'player'}">
-        <tr> 
-          <td data-bind="text: player.position"></td>
-          <td data-bind="text: player.name"></td>
-          <td data-bind="text: player.age"></td>
-          <td data-bind="text: player.skill"></td>
-          <td data-bind="text: player.speed"></td>
-          <td data-bind="text: player.strength"></td>
-          <td data-bind="text: player.starter"></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-10 offset-1">
+      <table class="table table-striped">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Position</th>
+            <th scope="col">Frist Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Skill</th>
+            <th scope="col">Speed</th>
+            <th scope="col">Strength</th>
+            <th scope="col">Starter</th>
+          </tr>
+          </thead>
+          <tbody data-bind="foreach: {data: roster, as: 'player'}">
+            <tr> 
+              <td data-bind="text: player.position.shortName"></td>
+              <td data-bind="text: player.first_name"></td>
+              <td data-bind="text: player.last_name"></td>
+              <td data-bind="text: player.age"></td>
+              <td data-bind="text: player.skill"></td>
+              <td data-bind="text: player.speed"></td>
+              <td data-bind="text: player.strength"></td>
+              <td data-bind="if: player.starter"><i class="fas fa-check"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

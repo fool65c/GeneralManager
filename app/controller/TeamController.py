@@ -17,9 +17,61 @@ def SetTeam(team_id):
     state.setTeam(team)
 
     Roster.assignPlayers(team)
-
+    setStarters(team)
     db.session.commit()
 
     VerifyState(state)
 
     return team.toJSON()
+
+
+def setStarters(team):
+    roster = Roster(team.id)
+    formations = {
+        'offensiveFormation': {
+            'QB': 1,
+            'RB': 2,
+            "WR": 2,
+            "TE": 1,
+            "OL": 5
+        },
+        'defensiveFormation': {
+            'DL': 4,
+            'LB': 4,
+            'DB': 3
+        },
+        'specialTeamsFormation': {
+            'K': 1,
+            'P': 1
+        }
+    }
+
+    starters = {}
+
+    for formation, positions in formations.items():
+        starters[formation] = {
+            'rating': 0
+        }
+        for position, count in positions.items():
+            currentStarters = 0
+            starters[formation][position] = 0
+            for player in roster.getPositionBySkill(position):
+                if currentStarters < count:
+                    player.starter = True
+                    starters[formation][position] += player.player\
+                                                           .getOverallLevel()
+                else:
+                    player.starter = False
+                currentStarters += 1
+
+    for formation in formations:
+        for position in formations[formation]:
+            starters[formation]['rating'] += (starters[formation][position]
+                                              / formations[formation]
+                                              [position])
+
+    team.offense = starters['offensiveFormation']['rating'] / 20
+    team.defense = starters['defensiveFormation']['rating'] / 20
+    team.special_teams = starters['specialTeamsFormation']['rating'] / 20
+
+    print(starters)

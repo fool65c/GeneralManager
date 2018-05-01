@@ -133,42 +133,101 @@ phase = Phase("OFFSEASON", "offseason")
 db.session.add(phase)
 
 print("Creating Positions")
-qb = Position("Quarter Back", "QB", 35, 0, 0, 9, 1, 90)
+qb = Position("Quarter Back", "QB", 35, 9, 1, 90)
 db.session.add(qb)
-rb = Position("Running Back", "RB", 10, 0, 0, 40, 40, 20)
+rb = Position("Running Back", "RB", 10, 40, 40, 20)
 db.session.add(rb)
-wr = Position("Wide Receiver", "WR", 10, 0, 0, 60, 15, 25)
+wr = Position("Wide Receiver", "WR", 10, 60, 15, 25)
 db.session.add(wr)
-te = Position("Tight End", "TE", 5, 0, 0, 30, 30, 40)
+te = Position("Tight End", "TE", 5, 30, 30, 40)
 db.session.add(te)
-ol = Position("Offensive Line", "OL", 40, 0, 0, 5, 45, 50)
+ol = Position("Offensive Line", "OL", 40, 5, 45, 50)
 db.session.add(ol)
 
-dl = Position("Defensive Line", "DL", 0, 35, 0, 4, 45, 50)
+dl = Position("Defensive Line", "DL", 35, 4, 45, 50)
 db.session.add(dl)
-lb = Position("Line Backer", "LB", 0, 35, 0, 30, 30, 40)
+lb = Position("Line Backer", "LB", 35, 30, 30, 40)
 db.session.add(lb)
-dback = Position("Defensive Back", "DB", 0, 30, 0, 60, 20, 20)
+dback = Position("Defensive Back", "DB", 30, 60, 20, 20)
 db.session.add(dback)
-k = Position("Kicker", "K", 0, 0, 50, 0, 5, 95)
+k = Position("Kicker", "K", 50, 0, 5, 95)
 db.session.add(k)
-p = Position("Punter", "P", 0, 0, 50, 0, 5, 95)
+p = Position("Punter", "P", 50, 0, 5, 95)
 db.session.add(p)
 
 print("Creating first roster")
-playerCount = {
-    qb: 3,
-    rb: 4,
-    wr: 6,
-    te: 3,
-    ol: 9,
-    dl: 9,
-    lb: 7,
-    dback: 10,
-    k: 1,
-    p: 1
+players = {
+    qb: {
+        'count': 3,
+        'abilities': {
+            'maxSpeed': 50,
+            'maxStrength': 50,
+        }
+    },
+    rb: {
+        'count': 4,
+        'abilities': {
+            'minSpeed': 50
+        }
+    },
+    wr: {
+        'count': 6,
+        'abilities': {
+            'minSpeed': 50
+        }
+    },
+    te: {
+        'count': 3,
+        'abilities': {
+            'maxSpeed': 75,
+            'minSpeed': 25
+        }
+    },
+    ol: {
+        'count': 9,
+        'abilities': {
+            'maxSpeed': 45,
+            'minStrength': 50
+        }
+    },
+    dl: {
+        'count': 9,
+        'abilities': {
+            'maxSpeed': 45,
+            'minStrength': 50
+        }
+    },
+    lb: {
+        'count': 9,
+        'abilities': {
+            'minSpeed': 33,
+            'maxSpeed': 75,
+            'minStrength': 33
+        }
+    },
+    dback: {
+        'count': 10,
+        'abilities': {
+            'minSpeed': 50
+        }
+    },
+    k: {
+        'count': 1,
+        'abilities': {
+            'maxSpeed': 10,
+            'maxStrength': 15
+        }
+    },
+    p: {
+        'count': 1,
+        'abilities': {
+            'maxSpeed': 10,
+            'maxStrength': 15
+        }
+    }
 }
-for position, count in playerCount.items():
-    for c in range(0, count):
-        db.session.add(generatePlayer(position))
+
+for position, attr in players.items():
+    for c in range(0, attr['count']):
+        db.session.add(generatePlayer(position, **attr['abilities']))
 db.session.commit()

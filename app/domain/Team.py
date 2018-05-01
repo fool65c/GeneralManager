@@ -1,3 +1,4 @@
+from math import floor
 from app.domain import Base
 from sqlalchemy import Column
 from sqlalchemy import Integer
@@ -35,9 +36,9 @@ class Team(Base):
         return {
             "id": self.id,
             "city": self.city,
-            "offense": self.offense,
-            "defense": self.defense,
-            "special_teams": self.special_teams,
+            "offense": floor(self.offense),
+            "defense": floor(self.defense),
+            "special_teams": floor(self.special_teams),
             "wins": self.wins,
             "losses": self.losses,
             "points_for": self.points_for,

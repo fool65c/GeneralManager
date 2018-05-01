@@ -1,3 +1,4 @@
+from math import floor
 from app.domain import Base
 from sqlalchemy import Column
 from sqlalchemy import Integer
@@ -34,39 +35,26 @@ class Player(Base):
         self.strength = strength
         self.position_ability = position_ability
 
-    def getOffensiveWeight(self):
+    def getOverallLevel(self):
         speed_weight = self.position.speed_weight * self.speed / 100
         strength_weight = self.position.strength_weight * self.strength / 100
         position_ability = (self.position.position_ability_weight
                             * self.position_ability / 100)
         overall = speed_weight + strength_weight + position_ability
-        contribution = overall * self.position.offensive_weight / 100
-        return contribution
-
-    def getDefensiveWeight(self):
-        speed_weight = self.position.speed_weight * self.speed / 100
-        strength_weight = self.position.strength_weight * self.strength / 100
-        position_ability = (self.position.position_ability_weight
-                            * self.position_ability / 100)
-        overall = speed_weight + strength_weight + position_ability
-        contribution = overall * self.position.defensive_weight / 100
-        return contribution
-
-    def getSpecialTeamsWeight(self):
-        speed_weight = self.position.speed_weight * self.speed / 100
-        strength_weight = self.position.strength_weight * self.strength / 100
-        position_ability = (self.position.position_ability_weight
-                            * self.position_ability / 100)
-        overall = speed_weight + strength_weight + position_ability
-        contribution = overall * self.position.st_weight / 100
+        contribution = overall * self.position.position_weight / 100
         return contribution
 
     def toJSON(self):
         return {
             'position': self.position.toJSON(),
-            'name': self.first_name + ' ' + self.last_name,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
             'age': self.age,
             'speed': self.speed,
             'strength': self.strength,
-            'skill': self.position_ability
+            'skill': self.position_ability,
+            'level': floor((self.getOverallLevel() /
+                            self.position.position_weight) * 5),
+            'level2': self.getOverallLevel(),
+            'possible': self.position.position_weight
         }

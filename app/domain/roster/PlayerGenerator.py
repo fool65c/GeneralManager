@@ -2,14 +2,23 @@ from app.domain.roster.Player import Player
 from random import choice, randint
 
 
-def generatePlayer(position):
-    firstName = choice(__firstNames)
-    lastName = choice(__lastName)
+def generatePlayer(position,
+                   minSpeed=1,
+                   maxSpeed=100,
+                   minStrength=1,
+                   maxStrength=100,
+                   minAbility=35,
+                   maxAbility=100,
+                   minAge=23,
+                   maxAge=38
+                   ):
+    firstName = choice(__firstNames).lower().capitalize()
+    lastName = choice(__lastName).lower().capitalize()
 
-    speed = randint(1, 101)
-    strength = randint(1, 101)
-    position_ability = randint(50, 96)
-    age = randint(23, 38)
+    speed = randint(minSpeed, maxSpeed)
+    strength = randint(minStrength, maxStrength)
+    position_ability = randint(minAbility, maxAbility)
+    age = randint(minAge, maxAge)
 
     return Player(position, firstName, lastName, age,
                   speed, strength, position_ability)

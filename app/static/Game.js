@@ -30,6 +30,7 @@ gameState.updateMenu= function() {
       newMenu = [
         {href: '#/regularSeason', text: 'Dashboard'},
         {text: 'Team', items: [
+          {href: '#/depthChart', text: 'Depth Chart'},
           {href: '#/teamRoster', text: 'Roster'},
           {href: '#/teamSchedule', text: 'Schedule'}
         ]},

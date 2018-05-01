@@ -16,6 +16,11 @@ var routes = [
     function: 'routeTeamRoster'
   },
   {
+    script: '/routes/depthChart.js',
+    route: '/depthChart',
+    function: 'routeDepthChart'
+  },
+  {
     script: '/routes/teamSchedule.js',
     route: '/teamSchedule',
     function: 'routeTeamSchedule'

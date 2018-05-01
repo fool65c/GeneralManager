@@ -10,30 +10,11 @@ class Roster:
         self.roster = query(TeamToPlayer).filter_by(team_id=team_id).all()
 
     def toJSON(self):
-        roster = {}
-        for status, allPlayers in groupby(self.roster, lambda p: p.starter):
-            statusText = None
-            if status:
-                statusText = "Starter"
-            else:
-                statusText = "Bench"
-            if statusText not in roster:
-                roster[statusText] = {}
+        return [ { **p.player.toJSON(), "starter": p.starter} for p in self.roster]
 
-            for position, players in groupby(allPlayers,
-                                             lambda p:
-                                             p.player.position.shortName
-                                             ):
-                players = sorted(players,
-                                 key=lambda p: (p.player.getOffensiveWeight()
-                                                + p.player.getDefensiveWeight()
-                                                + (p.player
-                                                   .getSpecialTeamsWeight())
-                                                ),
-                                 reverse=True)
-                roster[statusText][position] = [p.player.toJSON()
-                                                for p in players]
-        return roster
+    def getPositionBySkill(self, position):
+        players = list(filter(lambda p: p.player.position.shortName == position, self.roster))
+        return sorted(players, key=lambda p: p.player.getOverallLevel(), reverse=True)
 
     @staticmethod
     def assignPlayers(team):

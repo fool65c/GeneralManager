@@ -9,26 +9,20 @@ class Position(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     shortName = Column(String, nullable=False)
-    offensive_weight = Column(Integer, nullable=False)
-    defensive_weight = Column(Integer, nullable=False)
-    st_weight = Column(Integer, nullable=False)
+    position_weight = Column(Integer, nullable=False)
     speed_weight = Column(Integer, nullable=False)
     strength_weight = Column(Integer, nullable=False)
     position_ability_weight = Column(Integer, nullable=False)
 
     def __init__(self, name,
                  shortName,
-                 oWeight,
-                 dWeight,
-                 stWeight,
+                 position_weight,
                  speed_weight,
                  strength_weight,
                  position_ability_weight):
         self.name = name
         self.shortName = shortName
-        self.offensive_weight = oWeight
-        self.defensive_weight = dWeight
-        self.st_weight = stWeight
+        self.position_weight = position_weight
         self.speed_weight = speed_weight
         self.strength_weight = strength_weight
         self.position_ability_weight = position_ability_weight
