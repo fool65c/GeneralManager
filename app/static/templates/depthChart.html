@@ -1,0 +1,52 @@
+<div id="depth-chart">
+  <div class="row justify-content-center mt-3">
+    <div class="col-3">
+      <button type="button" class="btn btn-block"
+              data-bind="css: { 'btn-secondary': activeChart() == 'offense',
+                                'btn-outline-secondary': activeChart() != 'offense'},
+                         click: setOffensiveChart">
+        Offense
+      </button>
+    </div>
+    <div class="col-3 offset-1">
+      <button type="button" class="btn btn-block"
+              data-bind="css: { 'btn-secondary': activeChart() == 'defense',
+                                'btn-outline-secondary': activeChart() != 'defense'},
+                         click: setDefensiveChart">
+        Defense
+      </button>
+    </div>
+    <div class="col-3 offset-1">
+      <button type="button" class="btn btn-block"
+              data-bind="css: { 'btn-secondary': activeChart() == 'st',
+                                'btn-outline-secondary': activeChart() != 'st'},
+                         click: setSpecialTeamsChart">
+        Special Teams
+      </button>
+    </div>
+  </div>
+  <div data-bind="foreach: { data: positions(), as: 'position' }">
+    <div class="row justify-content-center"
+         data-bind="foreach: { data: $root.roster()[position], as: 'starter'}">
+      <div class="col-1" data-bind="text: position.shortName"></div>
+      <div class="col-1" data-bind="text: last_name"></div>
+      <div class="col-1">
+        <div class="inner" style="color:Gray">
+          <i class="fas fa-circle xxs"></i>
+          <i class="fas fa-circle xxs"></i>
+          <i class="fas fa-circle xxs"></i>
+          <i class="fas fa-circle xxs"></i>
+          <i class="fas fa-circle xxs"></i>
+        </div>
+        <div class="inner" style="color:Blue" data-bind="foreach: new Array(level)">
+          <i class="fas fa-circle xxs"></i>
+        </div>
+      </div>
+      <div class="col-1" data-bind="text: skill"></div>
+      <div class="col-1" data-bind="text: speed"></div>
+      <div class="col-1" data-bind="text: strength"></div>
+      <div class="col-1" data-bind="text: starter"></div>
+      <div class="col-5"></div>
+    </div>
+  </div>
+</div>
