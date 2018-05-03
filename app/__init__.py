@@ -3,6 +3,7 @@ from app.server import app, api
 from app.resources.TeamResource import TeamResource
 from app.resources.TeamResource import TeamRosterResource
 from app.resources.TeamResource import TeamsResource
+from app.resources.PlayerResource import RetireResource
 from app.resources.ScheduleResource import GetTeamRegularSeasonResource
 from app.resources.ScheduleResource import GetRegularSeasonResource
 from app.resources.ScheduleResource import PlayNextWeekResource
@@ -30,6 +31,8 @@ def catch_all(path):
 api.add_resource(TeamResource, '/api/team/<team_id>')
 api.add_resource(TeamRosterResource, '/api/team/<team_id>/roster')
 api.add_resource(TeamsResource, '/api/team')
+
+api.add_resource(RetireResource, '/api/player/retire')
 
 api.add_resource(GetRegularSeasonResource, '/api/schedule')
 api.add_resource(GetTeamRegularSeasonResource, '/api/schedule/<team_id>')

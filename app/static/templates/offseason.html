@@ -1,7 +1,35 @@
 <div id="offseason">
   <div class="row justify-content-center">
-    <div class="col-8 text-center">
-      More to come
+    <div class="col-10 text-center">
+      <table class="table table-striped">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col">Position</th>
+            <th scope="col">Frist Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Skill</th>
+            <th scope="col">Speed</th>
+            <th scope="col">Strength</th>
+          </tr>
+          </thead>
+          <tbody data-bind="{ if: retirees().length > 0, foreach: {data: retirees, as: 'player'}">
+            <tr> 
+              <td data-bind="text: player.position.shortName"></td>
+              <td data-bind="text: player.first_name"></td>
+              <td data-bind="text: player.last_name"></td>
+              <td data-bind="text: player.age"></td>
+              <td data-bind="text: player.skill"></td>
+              <td data-bind="text: player.speed"></td>
+              <td data-bind="text: player.strength"></td>
+            </tr>
+          </tbody>
+          <tbody data-bind="if: retirees().length == 0">
+            <tr> 
+              <td colspan="7" data-bind="if: retirees().length == 0">None</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
   </div>
   <div class="row justify-content-center">
@@ -9,7 +37,7 @@
       <button type="button"
               class="btn btn-primary"
               data-bind="click: gameState.advance">
-        Start Season
+        Start Free Agency
       </button>
     </div>
   </div>

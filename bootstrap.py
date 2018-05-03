@@ -1,16 +1,16 @@
 import random
 from app.server import db
-from app.domain.Conference import Conference
-from app.domain.Division import Division
-from app.domain.Team import Team
-from app.domain.Game import Game
-from app.domain.Champions import Champions
-from app.domain.Season import Season
-from app.domain.History import History
-from app.domain.Schedule import Schedule
-from app.domain.Result import Result
+from app.domain.league.Conference import Conference
+from app.domain.league.Division import Division
+from app.domain.league.Team import Team
+from app.domain.schedule.Game import Game
+from app.domain.league.Champions import Champions
+from app.domain.schedule.Season import Season
+from app.domain.league.History import History
+from app.domain.schedule.Schedule import Schedule
+from app.domain.schedule.Result import Result
 from app.domain.Phase import Phase
-from app.domain.Playoff import Playoff
+from app.domain.schedule.Playoff import Playoff
 from app.domain.State import State
 
 # Players and stuff
@@ -129,7 +129,13 @@ phase = Phase("STARTPOSTSEASON", "createPlayoffs")
 db.session.add(phase)
 phase = Phase("POSTSEASON", "playoffs")
 db.session.add(phase)
-phase = Phase("OFFSEASON", "offseason")
+phase = Phase("STARTOFFSEASON", "offseason")
+db.session.add(phase)
+phase = Phase("FREEAGENCY", "freeAgency")
+db.session.add(phase)
+phase = Phase("DRAFT", "draft")
+db.session.add(phase)
+phase = Phase("COMPLETEOFFSEASON", "completeOffseason")
 db.session.add(phase)
 
 print("Creating Positions")

@@ -1,5 +1,5 @@
 from app.controller.StateController import VerifyState
-from app.domain.Team import Team
+from app.domain.league.Team import Team
 from app.domain.State import State
 from app.domain.roster.Roster import Roster
 from app.server import query

@@ -1,16 +1,17 @@
-from app.domain.Champions import Champions
-from app.domain.Schedule import Schedule
-from app.domain.History import History
-from app.domain.Playoff import Playoff
-from app.domain.Season import Season
-from app.domain.Team import Team
+from app.domain.league.Champions import Champions
+from app.domain.schedule.Schedule import Schedule
+from app.domain.league.History import History
+from app.domain.schedule.Playoff import Playoff
+from app.domain.schedule.Season import Season
+from app.domain.State import State
+from app.domain.league.Team import Team
 from app.server import query
 from app.server import db
 from sqlalchemy import func
 import random
 
 
-def OffseasonController():
+def StartOffseasonController():
     # Set Champion
     season = query(Season,
                    func.max(Season.id)).first()[0]
@@ -37,6 +38,25 @@ def OffseasonController():
         team.points_for = 0
         team.points_against = 0
 
+    # Clear Schedule
+    query(Schedule).delete()
+    query(Playoff).delete()
+
+    # Advance Season
+    nextSeason = Season("Season {}".format(season.id + 1))
+    db.session.add(nextSeason)
+    db.session.commit()
+
+
+def TrainTeams():
+    state = query(State).first()
+    teams = query(Team).all()
+    for team in teams:
+        # skip the player managed team
+        if team.id == state.team.id:
+            print("skipping player managed team {}".format(team.city))
+            continue
+
         # Adjust team rankings
         rand = random.random()
         if rand > 0.5 and team.offense < 5:
@@ -56,18 +76,3 @@ def OffseasonController():
         elif rand < 0.5 and team.special_teams > 1:
             team.special_teams -= 1
 
-    # Clear Schedule
-    query(Schedule).delete()
-    query(Playoff).delete()
-
-    # Advance Season
-    nextSeason = Season("Season {}".format(season.id + 1))
-    db.session.add(nextSeason)
-    db.session.commit()
-
-
-def PrepRankingsController(rankings):
-    teams = []
-    for rank, team in rankings.rankings.items():
-        teams.append(team)
-    return teams

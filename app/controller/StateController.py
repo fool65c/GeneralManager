@@ -1,9 +1,9 @@
 from app.controller.ScheduleController import CreateScheduleController
 from app.controller.ScheduleController import CreatePlayoffsController
-from app.controller.OffseasonController import OffseasonController
+from app.controller.OffseasonController import StartOffseasonController
 from app.domain.Phase import Phase
-from app.domain.Schedule import Schedule
-from app.domain.Playoff import Playoff
+from app.domain.schedule.Schedule import Schedule
+from app.domain.schedule.Playoff import Playoff
 from app.domain.State import State
 from app.server import query
 from app.server import db
@@ -32,9 +32,9 @@ def VerifyState(state):
         state = CreatePlayoffsController()
     elif not playoffsLeft and state.phase.phase == "POSTSEASON":
         state.advancePhase()
-        OffseasonController()
+        StartOffseasonController()
         db.session.commit()
-    elif state.phase.phase == "OFFSEASON":
+    elif state.phase.phase == "COMPLETEOFFSEASON":
         startOver = query(Phase).filter_by(phase="GENERATE_SCHEDULE").first()
         state.phase = startOver
         db.session.commit()

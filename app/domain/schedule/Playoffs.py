@@ -1,5 +1,5 @@
-from app.domain.Conference import Conference
-from app.domain.Playoff import Playoff
+from app.domain.league.Conference import Conference
+from app.domain.schedule.Playoff import Playoff
 from app.server import query
 from app.server import db
 from itertools import groupby

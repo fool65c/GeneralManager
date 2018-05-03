@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from app.domain.Standings import Standings
+from app.domain.schedule.Standings import Standings
 
 
 class RankingResource(Resource):

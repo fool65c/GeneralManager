@@ -1,6 +1,6 @@
 from app.domain.State import State
-from app.domain.CreateSchedule import CreateSchedule
-from app.domain.PostSeasonSchedule import PostSeasonSchedule
+from app.domain.schedule.CreateSchedule import CreateSchedule
+from app.domain.schedule.PostSeasonSchedule import PostSeasonSchedule
 from app.server import query
 from app.server import db
 

@@ -1,9 +1,12 @@
 function offseason() { 
   $('div.content').load('templates/offseason.html', function(){
-    function display() {
-      var self = this;
-    }
+    api.getPlayersRetiring().then(function(retirees) {
+      function display() {
+        var self = this;
+        self.retirees = ko.observableArray(retirees);
+      }
 
-    ko.applyBindings(new display(), document.getElementById('offseason'));
+      ko.applyBindings(new display(), document.getElementById('offseason'));
+    });
   });
 }

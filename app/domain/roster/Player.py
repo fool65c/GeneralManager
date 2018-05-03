@@ -1,4 +1,5 @@
 from math import floor
+from random import choice
 from app.domain import Base
 from sqlalchemy import Column
 from sqlalchemy import Integer
@@ -43,6 +44,16 @@ class Player(Base):
         overall = speed_weight + strength_weight + position_ability
         contribution = overall * self.position.position_weight / 100
         return contribution
+
+    def willPlayerRetire(self):
+        if self.age > 35 and self.position_ability < 30:
+            return True
+
+        if self.age > 35 and self.position_ability < 50:
+            maybe = [True, False, False, False]
+            return choice(maybe)
+
+        return False
 
     def toJSON(self):
         return {

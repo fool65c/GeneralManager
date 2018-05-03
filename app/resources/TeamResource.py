@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from app.controller.TeamController import SetTeam
-from app.domain.Team import Team
+from app.domain.league.Team import Team
 from app.domain.roster.Roster import Roster
 from app.server import query
 

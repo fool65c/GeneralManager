@@ -1,8 +1,8 @@
-from app.domain.Game import Game
-from app.domain.Playoff import Playoff
-from app.domain.Playoffs import Playoffs
-from app.domain.Standings import Standings
-from app.domain.Conference import Conference
+from app.domain.schedule.Game import Game
+from app.domain.schedule.Playoff import Playoff
+from app.domain.schedule.Playoffs import Playoffs
+from app.domain.schedule.Standings import Standings
+from app.domain.league.Conference import Conference
 from app.server import db
 from app.server import query
 

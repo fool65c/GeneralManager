@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from app.domain.Schedule import Schedule
+from app.domain.schedule.Schedule import Schedule
 from app.server import query
 from app.server import db
 from sqlalchemy import func

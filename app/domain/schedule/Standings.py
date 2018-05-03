@@ -1,7 +1,7 @@
 from random import choices
-from app.domain.Conference import Conference
-from app.domain.Division import Division
-from app.domain.Team import Team
+from app.domain.league.Conference import Conference
+from app.domain.league.Division import Division
+from app.domain.league.Team import Team
 from app.server import query
 
 

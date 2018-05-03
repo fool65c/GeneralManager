@@ -16,7 +16,11 @@ class GeneralManagerRestApi {
   }
 
   setTeam(team_id) {
-    return this.postJSON('/api/team', {"team_id": team_id})
+    return this.postJSON('/api/team', {"team_id": team_id});
+  }
+
+  getPlayersRetiring() {
+    return this.getJSON('/api/player/retire');
   }
 
   getTeamRankings() {

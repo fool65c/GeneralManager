@@ -3,7 +3,7 @@ from sqlalchemy import Integer
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
-from app.domain.Result import Result
+from app.domain.schedule.Result import Result
 from app.server import db
 
 
