@@ -23,6 +23,14 @@ class GeneralManagerRestApi {
     return this.getJSON('/api/player/retire');
   }
 
+  getFreeAgents() {
+    return this.getJSON('/api/player/freeAgents');
+  }
+
+  getFormations() {
+    return this.getJSON('/api/formation');
+  }
+
   getTeamRankings() {
     return this.getJSON('/api/rankings');
   }

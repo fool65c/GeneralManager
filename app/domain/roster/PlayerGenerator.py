@@ -24,6 +24,79 @@ def generatePlayer(position,
                   speed, strength, position_ability)
 
 
+def getPositionDefaults():
+    return {
+        'QB': {
+            'count': 3,
+            'abilities': {
+                'maxSpeed': 50,
+                'maxStrength': 50,
+            }
+        },
+        'RB': {
+            'count': 4,
+            'abilities': {
+                'minSpeed': 50
+            }
+        },
+        'WR': {
+            'count': 6,
+            'abilities': {
+                'minSpeed': 50
+            }
+        },
+        'TE': {
+            'count': 3,
+            'abilities': {
+                'maxSpeed': 75,
+                'minSpeed': 25
+            }
+        },
+        'OL': {
+            'count': 9,
+            'abilities': {
+                'maxSpeed': 45,
+                'minStrength': 50
+            }
+        },
+        'DL': {
+            'count': 9,
+            'abilities': {
+                'maxSpeed': 45,
+                'minStrength': 50
+            }
+        },
+        'LB': {
+            'count': 9,
+            'abilities': {
+                'minSpeed': 33,
+                'maxSpeed': 75,
+                'minStrength': 33
+            }
+        },
+        'DB': {
+            'count': 10,
+            'abilities': {
+                'minSpeed': 50
+            }
+        },
+        'K': {
+            'count': 1,
+            'abilities': {
+                'maxSpeed': 10,
+                'maxStrength': 15
+            }
+        },
+        'P': {
+            'count': 1,
+            'abilities': {
+                'maxSpeed': 10,
+                'maxStrength': 15
+            }
+        }
+    }
+
+
 __firstNames = [
     "AARON",
     "ABDUL",

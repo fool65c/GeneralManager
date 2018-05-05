@@ -10,6 +10,8 @@ class Roster:
         self.roster = query(TeamToPlayer).filter_by(team_id=team_id).all()
 
     def toJSON(self):
+        for p in self.roster:
+            print(p.toJSON())
         return [ { **p.player.toJSON(), "starter": p.starter} for p in self.roster]
 
     def getPositionBySkill(self, position):

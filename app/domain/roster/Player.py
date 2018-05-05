@@ -46,7 +46,7 @@ class Player(Base):
         return contribution
 
     def willPlayerRetire(self):
-        if self.age > 35 and self.position_ability < 30:
+        if self.age > 35 and self.position_ability < 99:
             return True
 
         if self.age > 35 and self.position_ability < 50:

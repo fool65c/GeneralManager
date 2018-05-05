@@ -49,6 +49,11 @@ var routes = [
     script: '/routes/offseason.js',
     route: '/offseason',
     function: 'offseason'
+  },
+  {
+    script: '/routes/freeAgents.js',
+    route: '/freeAgency',
+    function: 'freeAgency'
   }
 ]
 

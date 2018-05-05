@@ -130,8 +130,6 @@ class PostSeasonSchedule(object):
                                         reverse=True)
             playoffTeams[conf] = sorted(playoffTeams[conf],
                                         key=lambda x: x.wins, reverse=True)
-            for r, t in enumerate(playoffTeams[conf]):
-                print("KMAGER0",r,t.city,t.wins)
 
             wildCardTeams[conf] = sorted(wildCardTeams[conf],
                                          key=lambda x: x.points_against)
@@ -140,8 +138,6 @@ class PostSeasonSchedule(object):
                                          reverse=True)
             wildCardTeams[conf] = sorted(wildCardTeams[conf],
                                          key=lambda x: x.wins, reverse=True)
-            for r, t in enumerate(wildCardTeams[conf]):
-                print("KMAGER1", r,t.city,t.wins)
 
         for conf in query(Conference).all():
             # team rank 1 gets a bye

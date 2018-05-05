@@ -1,5 +1,6 @@
 import random
 from app.server import db
+from app.server import query
 from app.domain.league.Conference import Conference
 from app.domain.league.Division import Division
 from app.domain.league.Team import Team
@@ -17,6 +18,7 @@ from app.domain.State import State
 from app.domain.roster.Position import Position
 from app.domain.roster.Player import Player
 from app.domain.roster.PlayerGenerator import generatePlayer
+from app.domain.roster.PlayerGenerator import getPositionDefaults
 
 # db imports
 from app.domain import initialize_sql
@@ -162,78 +164,10 @@ p = Position("Punter", "P", 50, 0, 5, 95)
 db.session.add(p)
 
 print("Creating first roster")
-players = {
-    qb: {
-        'count': 3,
-        'abilities': {
-            'maxSpeed': 50,
-            'maxStrength': 50,
-        }
-    },
-    rb: {
-        'count': 4,
-        'abilities': {
-            'minSpeed': 50
-        }
-    },
-    wr: {
-        'count': 6,
-        'abilities': {
-            'minSpeed': 50
-        }
-    },
-    te: {
-        'count': 3,
-        'abilities': {
-            'maxSpeed': 75,
-            'minSpeed': 25
-        }
-    },
-    ol: {
-        'count': 9,
-        'abilities': {
-            'maxSpeed': 45,
-            'minStrength': 50
-        }
-    },
-    dl: {
-        'count': 9,
-        'abilities': {
-            'maxSpeed': 45,
-            'minStrength': 50
-        }
-    },
-    lb: {
-        'count': 9,
-        'abilities': {
-            'minSpeed': 33,
-            'maxSpeed': 75,
-            'minStrength': 33
-        }
-    },
-    dback: {
-        'count': 10,
-        'abilities': {
-            'minSpeed': 50
-        }
-    },
-    k: {
-        'count': 1,
-        'abilities': {
-            'maxSpeed': 10,
-            'maxStrength': 15
-        }
-    },
-    p: {
-        'count': 1,
-        'abilities': {
-            'maxSpeed': 10,
-            'maxStrength': 15
-        }
-    }
-}
-
-for position, attr in players.items():
-    for c in range(0, attr['count']):
-        db.session.add(generatePlayer(position, **attr['abilities']))
+player = getPositionDefaults()
+for position in query(Position).all():
+    for c in range(0, player[position.shortName]['count']):
+        db.session.add(generatePlayer(position,
+                                      **player[position.shortName]['abilities']
+                                      ))
 db.session.commit()

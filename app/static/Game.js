@@ -46,6 +46,13 @@ gameState.updateMenu= function() {
         { href: '#/rankings', text: 'Rankings'}
       ];
       break;
+    case "FREEAGENCY":
+      newMenu = [
+        {href: '#/freeAgency', text: 'Free Agents'},
+        {href: '#/depthChart', text: 'Depth Chart'},
+        {href: '#/teamRoster', text: 'Roster'}
+      ];
+      break;
     default:
       newMenu = [];
       break;

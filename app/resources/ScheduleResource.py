@@ -96,11 +96,9 @@ class GetTeamRegularSeasonResource(Resource):
         games = query(Schedule).order_by(Schedule.week).all()
 
         for game in games:
-            print(game.game.home.id, team_id)
             team_id = int(team_id)
             if(game.game.home.id == team_id or
                game.game.away.id == team_id):
-                print("HERE")
                 schedule.append({
                     'week': game.week,
                     'game': game.toJSON()
