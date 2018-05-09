@@ -27,6 +27,10 @@ class GeneralManagerRestApi {
     return this.getJSON('/api/player/freeAgents');
   }
 
+  signFreeAgents(freeAgents) {
+    return this.postJSON('/api/player/freeAgents', freeAgents);
+  }
+
   getFormations() {
     return this.getJSON('/api/formation');
   }

@@ -57,6 +57,7 @@ class Player(Base):
 
     def toJSON(self):
         return {
+            'id': self.id,
             'position': self.position.toJSON(),
             'first_name': self.first_name,
             'last_name': self.last_name,

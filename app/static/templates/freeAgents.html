@@ -1,6 +1,19 @@
 <div id="free-agents">
   <div class="row">
-    <div class="col-10 offset-1">
+    <div class="col-2">
+      <ul class="list-group" data-bind="foreach: needs">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between">
+            <h6 class="mb-1" data-bind="text: position + '\'s Required'"></h6>
+          </div>
+          <span class="badge badge-primary badge-pill" data-bind="text: need"></span>
+        </li>
+      </ul>
+      <button type="button" class="mt-3 btn btn-primary btn-lg btn-block" data-bind="click: signPlayers">
+        Sign Players
+      </button>
+    </div>
+    <div class="col-10">
       <table class="table table-striped">
         <thead class="thead-light">
           <tr>
@@ -14,16 +27,16 @@
             <th scope="col">Sign</th>
           </tr>
           </thead>
-          <tbody data-bind="foreach: {data: roster, as: 'player'}">
-            <tr> 
-              <td data-bind="text: player.position.shortName"></td>
-              <td data-bind="text: player.first_name"></td>
-              <td data-bind="text: player.last_name"></td>
-              <td data-bind="text: player.age"></td>
-              <td data-bind="text: player.skill"></td>
-              <td data-bind="text: player.speed"></td>
-              <td data-bind="text: player.strength"></td>
-              <td data-bind="if: player.starter"><i class="fas fa-check"></i></td>
+          <tbody data-bind="foreach: freeAgents">
+            <tr>
+              <td data-bind="text: position.shortName"></td>
+              <td data-bind="text: first_name"></td>
+              <td data-bind="text: last_name"></td>
+              <td data-bind="text: age"></td>
+              <td data-bind="text: skill"></td>
+              <td data-bind="text: speed"></td>
+              <td data-bind="text: strength"></td>
+              <td><input type='checkbox' data-bind="click: playerClicked"></td>
             </tr>
           </tbody>
         </table>
