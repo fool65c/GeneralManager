@@ -72,3 +72,9 @@ class Standings:
         for rank, t in self.standings[conf][division].items():
             if t.id == team.id:
                 return rank
+
+    @staticmethod
+    def getFullLeagueStandings():
+        return query(Team).order_by(Team.wins.desc()) \
+                          .order_by(Team.points_for.desc()) \
+                          .order_by(Team.points_against.asc()).all()

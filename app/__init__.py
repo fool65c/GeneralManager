@@ -18,6 +18,7 @@ from app.resources.PlayoffResource import PlayoffsNextWeekResource
 from app.resources.PlayoffResource import GetPlayoffScheduleResource
 from app.resources.StateResource import GetPhasesResource
 from app.resources.StateResource import GetGameState
+from app.resources.DraftResource import DraftPickResource
 
 
 @app.route('/', defaults={'path': ''})
@@ -51,6 +52,8 @@ api.add_resource(PlayoffsNextWeekResource, '/api/playoff/play')
 
 api.add_resource(RankingResource, '/api/rankings')
 api.add_resource(DivisionRankingResource, '/api/rankings/division')
+
+api.add_resource(DraftPickResource, '/api/draft/picks')
 
 api.add_resource(GetGameState, '/api/state')
 api.add_resource(GetPhasesResource, '/api/state/phase')

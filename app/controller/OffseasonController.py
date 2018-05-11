@@ -1,8 +1,10 @@
-from app.domain.league.Champions import Champions
-from app.domain.schedule.Schedule import Schedule
 from app.domain.league.History import History
+from app.domain.league.Champions import Champions
+from app.domain.schedule.Standings import Standings
+from app.domain.schedule.Schedule import Schedule
 from app.domain.schedule.Playoff import Playoff
 from app.domain.schedule.Season import Season
+from app.domain.draft.DraftPick import DraftPick
 from app.domain.State import State
 from app.domain.league.Team import Team
 from app.server import query
@@ -26,8 +28,22 @@ def StartOffseasonController():
         champion = Champions(championshipGame.away, season)
     db.session.add(champion)
 
-    teams = query(Team).all()
-    for team in teams:
+    # set draft picks for championship
+    for r in range(1, 8):
+        print("champ round {}".format(r))
+        dp = DraftPick(champion.team, 32 * r)
+        db.session.add(dp)
+
+    for index, team in enumerate(reversed(Standings.getFullLeagueStandings())):
+        # set draft picks
+        if team.id != champion.team.id:
+            if index == 32:
+                index = 30
+            for r in range(0, 7):
+                print(team.city, r, index, index + 1 + 32 * r)
+                dp = DraftPick(team, index + 1 + 32 * r)
+                db.session.add(dp)
+
         # Copy History
         history = History(team, season)
         db.session.add(history)
@@ -75,4 +91,3 @@ def TrainTeams():
             team.special_teams += 1
         elif rand < 0.5 and team.special_teams > 1:
             team.special_teams -= 1
-
